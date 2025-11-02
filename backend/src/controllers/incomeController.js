@@ -199,6 +199,12 @@ const deleteIncome = async (req, res) => {
 // @access  Private
 const getIncomeStats = async (req, res) => {
   try {
+    const now = new Date();
+    const currentMonthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    const lastMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    const lastMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0);
+
+    // Get category stats
     const stats = await Income.aggregate([
       {
         $match: { user: req.user._id }
@@ -206,16 +212,17 @@ const getIncomeStats = async (req, res) => {
       {
         $group: {
           _id: '$category',
-          totalAmount: { $sum: '$amount' },
+          total: { $sum: '$amount' },
           count: { $sum: 1 },
           avgAmount: { $avg: '$amount' }
         }
       },
       {
-        $sort: { totalAmount: -1 }
+        $sort: { total: -1 }
       }
     ]);
 
+    // Get total income
     const totalIncome = await Income.aggregate([
       {
         $match: { user: req.user._id }
@@ -229,11 +236,46 @@ const getIncomeStats = async (req, res) => {
       }
     ]);
 
+    // Get current month income
+    const currentMonthIncome = await Income.aggregate([
+      {
+        $match: { 
+          user: req.user._id,
+          date: { $gte: currentMonthStart }
+        }
+      },
+      {
+        $group: {
+          _id: null,
+          total: { $sum: '$amount' }
+        }
+      }
+    ]);
+
+    // Get last month income
+    const lastMonthIncome = await Income.aggregate([
+      {
+        $match: { 
+          user: req.user._id,
+          date: { $gte: lastMonthStart, $lte: lastMonthEnd }
+        }
+      },
+      {
+        $group: {
+          _id: null,
+          total: { $sum: '$amount' }
+        }
+      }
+    ]);
+
     res.status(200).json({
       success: true,
       data: {
         byCategory: stats,
-        total: totalIncome[0] || { total: 0, count: 0 }
+        total: totalIncome[0]?.total || 0,
+        currentMonth: currentMonthIncome[0]?.total || 0,
+        lastMonth: lastMonthIncome[0]?.total || 0,
+        count: totalIncome[0]?.count || 0
       }
     });
   } catch (error) {
