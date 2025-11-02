@@ -99,13 +99,19 @@ const ProfileScreen = ({ navigation }) => {
             <Ionicons name="chevron-forward" size={24} color={COLORS.textSecondary} />
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.actionButton}>
+          <TouchableOpacity 
+            style={styles.actionButton}
+            onPress={() => navigation.navigate('Settings')}
+          >
             <Ionicons name="settings-outline" size={24} color={COLORS.text} />
             <Text style={styles.actionButtonText}>Settings</Text>
             <Ionicons name="chevron-forward" size={24} color={COLORS.textSecondary} />
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.actionButton}>
+          <TouchableOpacity 
+            style={styles.actionButton}
+            onPress={() => navigation.navigate('HelpSupport')}
+          >
             <Ionicons name="help-circle-outline" size={24} color={COLORS.text} />
             <Text style={styles.actionButtonText}>Help & Support</Text>
             <Ionicons name="chevron-forward" size={24} color={COLORS.textSecondary} />

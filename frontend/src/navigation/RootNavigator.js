@@ -20,6 +20,8 @@ import AddIncomeScreen from '../screens/AddIncomeScreen';
 import RecurringExpensesScreen from '../screens/RecurringExpensesScreen';
 import AddRecurringExpenseScreen from '../screens/AddRecurringExpenseScreen';
 import ReportsScreen from '../screens/ReportsScreen';
+import SettingsScreen from '../screens/SettingsScreen';
+import HelpSupportScreen from '../screens/HelpSupportScreen';
 
 import { COLORS } from '../constants';
 
@@ -164,6 +166,16 @@ const MainStack = () => (
       name="Reports" 
       component={ReportsScreen}
       options={{ title: 'Financial Reports' }}
+    />
+    <Stack.Screen 
+      name="Settings" 
+      component={SettingsScreen}
+      options={{ title: 'Settings' }}
+    />
+    <Stack.Screen 
+      name="HelpSupport" 
+      component={HelpSupportScreen}
+      options={{ title: 'Help & Support' }}
     />
   </Stack.Navigator>
 );
