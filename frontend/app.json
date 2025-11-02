@@ -38,8 +38,9 @@
     ],
     "extra": {
       "eas": {
-        "projectId": "your-project-id-here"
+        "projectId": "8c79ebb8-6509-4199-adb2-0b2cfa877a7d"
       }
-    }
+    },
+    "owner": "shasikumar1099"
   }
 }
