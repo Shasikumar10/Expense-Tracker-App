@@ -141,19 +141,19 @@ const IncomeScreen = ({ navigation }) => {
             <View style={styles.statItem}>
               <Text style={styles.statLabel}>This Month</Text>
               <Text style={styles.statValue}>
-                {getCurrencySymbol()}{stats.currentMonth?.toFixed(2) || '0.00'}
+                {getCurrencySymbol()}{(stats.currentMonth || 0).toFixed(2)}
               </Text>
             </View>
             <View style={styles.statItem}>
               <Text style={styles.statLabel}>Last Month</Text>
               <Text style={styles.statValue}>
-                {getCurrencySymbol()}{stats.lastMonth?.toFixed(2) || '0.00'}
+                {getCurrencySymbol()}{(stats.lastMonth || 0).toFixed(2)}
               </Text>
             </View>
             <View style={styles.statItem}>
               <Text style={styles.statLabel}>Total</Text>
               <Text style={styles.statValue}>
-                {getCurrencySymbol()}{stats.total?.toFixed(2) || '0.00'}
+                {getCurrencySymbol()}{(stats.total || 0).toFixed(2)}
               </Text>
             </View>
           </View>

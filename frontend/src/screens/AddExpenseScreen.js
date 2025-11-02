@@ -91,8 +91,9 @@ const AddExpenseScreen = ({ navigation }) => {
         <View style={styles.pickerContainer}>
           <Picker
             selectedValue={category}
-            onValueChange={setCategory}
+            onValueChange={(itemValue) => setCategory(itemValue)}
             style={styles.picker}
+            itemStyle={Platform.OS === 'ios' ? styles.pickerItem : undefined}
           >
             {EXPENSE_CATEGORIES.map((cat) => (
               <Picker.Item key={cat} label={cat} value={cat} />
@@ -122,8 +123,9 @@ const AddExpenseScreen = ({ navigation }) => {
         <View style={styles.pickerContainer}>
           <Picker
             selectedValue={paymentMethod}
-            onValueChange={setPaymentMethod}
+            onValueChange={(itemValue) => setPaymentMethod(itemValue)}
             style={styles.picker}
+            itemStyle={Platform.OS === 'ios' ? styles.pickerItem : undefined}
           >
             {PAYMENT_METHODS.map((method) => (
               <Picker.Item key={method} label={method} value={method} />
@@ -187,9 +189,15 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLORS.border,
     borderRadius: 8,
+    overflow: 'hidden',
   },
   picker: {
-    height: 50,
+    height: Platform.OS === 'ios' ? 180 : 50,
+    width: '100%',
+  },
+  pickerItem: {
+    height: 180,
+    fontSize: 16,
   },
   dateButton: {
     backgroundColor: COLORS.white,
