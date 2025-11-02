@@ -97,8 +97,8 @@ const ReportsScreen = () => {
   const renderSummary = () => {
     if (!summary) return null;
 
-    const netSavings = summary.totalIncome - summary.totalExpenses;
-    const savingsRate = summary.totalIncome > 0 
+    const netSavings = (summary.totalIncome || 0) - (summary.totalExpenses || 0);
+    const savingsRate = (summary.totalIncome || 0) > 0 
       ? ((netSavings / summary.totalIncome) * 100).toFixed(1)
       : 0;
 
@@ -112,7 +112,7 @@ const ReportsScreen = () => {
               <Ionicons name="arrow-down-circle" size={32} color={COLORS.success} />
               <Text style={styles.summaryLabel}>Income</Text>
               <Text style={[styles.summaryAmount, { color: COLORS.success }]}>
-                {getCurrencySymbol()}{summary.totalIncome.toFixed(2)}
+                {getCurrencySymbol()}{(summary.totalIncome || 0).toFixed(2)}
               </Text>
             </View>
             
@@ -120,7 +120,7 @@ const ReportsScreen = () => {
               <Ionicons name="arrow-up-circle" size={32} color={COLORS.danger} />
               <Text style={styles.summaryLabel}>Expenses</Text>
               <Text style={[styles.summaryAmount, { color: COLORS.danger }]}>
-                {getCurrencySymbol()}{summary.totalExpenses.toFixed(2)}
+                {getCurrencySymbol()}{(summary.totalExpenses || 0).toFixed(2)}
               </Text>
             </View>
           </View>
@@ -154,18 +154,18 @@ const ReportsScreen = () => {
           <View style={styles.breakdownRow}>
             <Text style={styles.breakdownLabel}>Average Daily</Text>
             <Text style={styles.breakdownValue}>
-              {getCurrencySymbol()}{summary.averageDaily.toFixed(2)}
+              {getCurrencySymbol()}{(summary.averageDaily || 0).toFixed(2)}
             </Text>
           </View>
           <View style={styles.breakdownRow}>
             <Text style={styles.breakdownLabel}>Largest Expense</Text>
             <Text style={styles.breakdownValue}>
-              {getCurrencySymbol()}{summary.largestExpense.toFixed(2)}
+              {getCurrencySymbol()}{(summary.largestExpense || 0).toFixed(2)}
             </Text>
           </View>
           <View style={styles.breakdownRow}>
             <Text style={styles.breakdownLabel}>Total Transactions</Text>
-            <Text style={styles.breakdownValue}>{summary.transactionCount}</Text>
+            <Text style={styles.breakdownValue}>{summary.transactionCount || 0}</Text>
           </View>
         </View>
       </ScrollView>

@@ -147,19 +147,19 @@ const BudgetsScreen = ({ navigation }) => {
             <View style={styles.overviewItem}>
               <Text style={styles.overviewLabel}>Budgeted</Text>
               <Text style={styles.overviewValue}>
-                {getCurrencySymbol()}{overview.totalBudgeted.toFixed(2)}
+                {getCurrencySymbol()}{(overview.totalBudgeted || 0).toFixed(2)}
               </Text>
             </View>
             <View style={styles.overviewItem}>
               <Text style={styles.overviewLabel}>Spent</Text>
               <Text style={[styles.overviewValue, { color: COLORS.danger }]}>
-                {getCurrencySymbol()}{overview.totalSpent.toFixed(2)}
+                {getCurrencySymbol()}{(overview.totalSpent || 0).toFixed(2)}
               </Text>
             </View>
             <View style={styles.overviewItem}>
               <Text style={styles.overviewLabel}>Remaining</Text>
               <Text style={[styles.overviewValue, { color: COLORS.success }]}>
-                {getCurrencySymbol()}{overview.remaining.toFixed(2)}
+                {getCurrencySymbol()}{(overview.remaining || 0).toFixed(2)}
               </Text>
             </View>
           </View>

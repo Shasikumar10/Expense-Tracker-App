@@ -168,7 +168,7 @@ const RecurringExpensesScreen = ({ navigation }) => {
         <View style={styles.detailItem}>
           <Ionicons name="cash-outline" size={16} color={COLORS.textSecondary} />
           <Text style={styles.detailText}>
-            {getCurrencySymbol()}{item.amount.toFixed(2)}
+            {getCurrencySymbol()}{(item.amount || 0).toFixed(2)}
           </Text>
         </View>
         <View style={styles.detailItem}>
@@ -207,7 +207,7 @@ const RecurringExpensesScreen = ({ navigation }) => {
       </View>
       <View style={styles.upcomingRight}>
         <Text style={styles.upcomingAmount}>
-          {getCurrencySymbol()}{item.amount.toFixed(2)}
+          {getCurrencySymbol()}{(item.amount || 0).toFixed(2)}
         </Text>
         <Text style={styles.upcomingDate}>{getDaysUntil(item.nextDueDate)}</Text>
       </View>
