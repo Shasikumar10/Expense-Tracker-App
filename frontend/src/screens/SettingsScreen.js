@@ -133,9 +133,7 @@ const SettingsScreen = ({ navigation }) => {
       const fileName = `expense_tracker_${new Date().getTime()}.csv`;
       const fileUri = FileSystem.documentDirectory + fileName;
       
-      await FileSystem.writeAsStringAsync(fileUri, csvContent, {
-        encoding: FileSystem.EncodingType.UTF8,
-      });
+      await FileSystem.writeAsStringAsync(fileUri, csvContent);
 
       if (await Sharing.isAvailableAsync()) {
         await Sharing.shareAsync(fileUri);
@@ -170,9 +168,7 @@ const SettingsScreen = ({ navigation }) => {
       const fileName = `expense_tracker_${new Date().getTime()}.json`;
       const fileUri = FileSystem.documentDirectory + fileName;
       
-      await FileSystem.writeAsStringAsync(fileUri, jsonContent, {
-        encoding: FileSystem.EncodingType.UTF8,
-      });
+      await FileSystem.writeAsStringAsync(fileUri, jsonContent);
 
       if (await Sharing.isAvailableAsync()) {
         await Sharing.shareAsync(fileUri);
