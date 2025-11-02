@@ -152,13 +152,15 @@ const LoginScreen = ({ navigation }) => {
               )}
             </TouchableOpacity>
 
-            <View style={styles.dividerContainer}>
+            {/* Divider temporarily hidden */}
+            {/* <View style={styles.dividerContainer}>
               <View style={styles.divider} />
               <Text style={styles.dividerText}>or</Text>
               <View style={styles.divider} />
-            </View>
+            </View> */}
 
-            <TouchableOpacity
+            {/* Google OAuth temporarily disabled for mobile - works in production with real domain */}
+            {/* <TouchableOpacity
               style={styles.googleButton}
               onPress={handleGoogleSignIn}
               disabled={loading}
@@ -168,7 +170,7 @@ const LoginScreen = ({ navigation }) => {
               ) : (
                 <Text style={styles.googleButtonText}>🔍 Continue with Google</Text>
               )}
-            </TouchableOpacity>
+            </TouchableOpacity> */}
 
             <TouchableOpacity
               style={styles.linkButton}

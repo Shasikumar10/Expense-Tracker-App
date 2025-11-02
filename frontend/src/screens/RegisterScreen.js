@@ -236,7 +236,8 @@ const RegisterScreen = ({ navigation }) => {
               )}
             </TouchableOpacity>
 
-            <View style={styles.dividerContainer}>
+            {/* Google OAuth temporarily disabled for mobile - works in production with real domain */}
+            {/* <View style={styles.dividerContainer}>
               <View style={styles.divider} />
               <Text style={styles.dividerText}>or</Text>
               <View style={styles.divider} />
@@ -252,7 +253,7 @@ const RegisterScreen = ({ navigation }) => {
               ) : (
                 <Text style={styles.googleButtonText}>🔍 Continue with Google</Text>
               )}
-            </TouchableOpacity>
+            </TouchableOpacity> */}
 
             <TouchableOpacity
               style={styles.linkButton}
