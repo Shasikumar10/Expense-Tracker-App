@@ -95,21 +95,24 @@ const RegisterScreen = ({ navigation }) => {
               autoCapitalize="none"
             />
 
-            <View style={styles.pickerContainer}>
-              <Text style={styles.label}>Currency</Text>
-              <Picker
-                selectedValue={currency}
-                onValueChange={setCurrency}
-                style={styles.picker}
-              >
-                {CURRENCIES.map((curr) => (
-                  <Picker.Item
-                    key={curr.code}
-                    label={`${curr.symbol} ${curr.name}`}
-                    value={curr.code}
-                  />
-                ))}
-              </Picker>
+            <View style={styles.pickerWrapper}>
+              <View style={styles.pickerContainer}>
+                <Text style={styles.label}>Currency</Text>
+                <Picker
+                  selectedValue={currency}
+                  onValueChange={setCurrency}
+                  style={styles.picker}
+                  itemStyle={styles.pickerItem}
+                >
+                  {CURRENCIES.map((curr) => (
+                    <Picker.Item
+                      key={curr.code}
+                      label={`${curr.symbol} - ${curr.name} (${curr.code})`}
+                      value={curr.code}
+                    />
+                  ))}
+                </Picker>
+              </View>
             </View>
 
             <TouchableOpacity
@@ -175,29 +178,40 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     fontSize: 16,
   },
+  pickerWrapper: {
+    marginBottom: 20,
+    zIndex: 1,
+  },
   pickerContainer: {
     backgroundColor: COLORS.white,
     borderWidth: 1,
     borderColor: COLORS.border,
     borderRadius: 8,
-    marginBottom: 15,
     paddingHorizontal: 10,
+    minHeight: 70,
   },
   label: {
     fontSize: 14,
     color: COLORS.textSecondary,
     marginTop: 10,
     marginBottom: 5,
+    fontWeight: '600',
   },
   picker: {
     height: 50,
+    width: '100%',
+  },
+  pickerItem: {
+    fontSize: 14,
+    height: 120,
   },
   button: {
     backgroundColor: COLORS.primary,
     borderRadius: 8,
     padding: 15,
     alignItems: 'center',
-    marginTop: 10,
+    marginTop: 20,
+    marginBottom: 10,
   },
   buttonDisabled: {
     opacity: 0.6,
