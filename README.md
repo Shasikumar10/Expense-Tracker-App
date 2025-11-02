@@ -6,10 +6,12 @@ A comprehensive full-stack mobile application for tracking expenses, managing bu
 
 ### Core Features
 - ✅ **User Authentication** - Secure registration and login with JWT
+- ✅ **Google OAuth** - Sign in with Google account
+- ✅ **Enhanced UI/UX** - Modern interface with real-time validation
 - ✅ **Expense Management** - Add, view, edit, and delete expenses
 - ✅ **Multi-Category Support** - 14+ expense categories
 - ✅ **Multiple Payment Methods** - Cash, Credit Card, Debit Card, Bank Transfer, Digital Wallet
-- ✅ **Multi-Currency Support** - USD, EUR, GBP, INR, JPY, AUD, CAD
+- ✅ **Multi-Currency Support** - 50+ world currencies (USD, EUR, GBP, INR, JPY, AUD, CAD, and more)
 
 ### Advanced Features
 - 💼 **Budget Management** - Set monthly/weekly/yearly budgets per category with alert thresholds
@@ -26,17 +28,22 @@ A comprehensive full-stack mobile application for tracking expenses, managing bu
 ## 🏗️ Tech Stack
 
 ### Frontend
-- **React Native** with Expo
+- **React Native** with Expo SDK 54
 - **React Navigation** (Stack & Bottom Tabs)
 - **Axios** for API calls
 - **AsyncStorage** for local data persistence
 - **React Context API** for state management
+- **expo-web-browser** for OAuth authentication
+- **@react-native-picker/picker** for currency selection
+- **Real-time form validation** with error messages
 
 ### Backend
 - **Node.js** with Express.js
 - **MongoDB** with Mongoose ODM
 - **JWT** for authentication
+- **Passport.js** with Google OAuth 2.0 strategy
 - **bcryptjs** for password hashing
+- **express-session** for session management
 - **CORS** enabled
 
 ## 🚀 Getting Started
@@ -68,9 +75,20 @@ Create a `.env` file in the backend directory:
 PORT=5000
 MONGODB_URI=your_mongodb_connection_string
 JWT_SECRET=your_jwt_secret_key_here
+JWT_EXPIRE=7d
 NODE_ENV=development
 CLIENT_URL=http://localhost:19000
+
+# Session Configuration
+SESSION_SECRET=your_session_secret_here
+
+# Google OAuth Configuration
+GOOGLE_CLIENT_ID=your_google_client_id_here
+GOOGLE_CLIENT_SECRET=your_google_client_secret_here
+GOOGLE_CALLBACK_URL=http://YOUR_IP:5000/api/auth/google/callback
 ```
+
+**Note**: For Google OAuth setup instructions, see [GOOGLE_OAUTH_SETUP.md](GOOGLE_OAUTH_SETUP.md)
 
 4. **Start the backend server**
 ```bash
@@ -142,6 +160,9 @@ npm start
 - `POST /api/auth/register` - Register new user
 - `POST /api/auth/login` - User login
 - `GET /api/auth/me` - Get current user
+- `GET /api/auth/google` - Initialize Google OAuth
+- `GET /api/auth/google/callback` - Google OAuth callback
+- `GET /api/auth/google/error` - Google OAuth error handler
 
 ### Expenses
 - `GET /api/expenses` - Get all expenses (with filters)
@@ -196,12 +217,41 @@ Weekly, Monthly, Yearly
 
 ## 🔒 Security Features
 
-- JWT-based authentication
-- Password hashing with bcryptjs
+- JWT-based authentication with 7-day expiry
+- Google OAuth 2.0 integration
+- Password hashing with bcryptjs (10 rounds)
 - Protected API routes with middleware
-- Input validation
+- Input validation and sanitization
+- Real-time form validation on frontend
+- Password visibility toggle for better UX
 - CORS configuration
+- Session management
 - Environment variable protection
+
+## ✨ Recent Improvements
+
+### UI/UX Enhancements
+- ✅ Enhanced RegisterScreen with better validation
+- ✅ Enhanced LoginScreen with improved error handling
+- ✅ Password visibility toggle on both auth screens
+- ✅ Real-time form validation with error messages
+- ✅ Loading states with activity indicators
+- ✅ Google Sign-In button integration
+- ✅ 50+ world currencies support
+- ✅ Improved currency picker layout
+
+### Backend Improvements
+- ✅ Google OAuth authentication with Passport.js
+- ✅ Session management for OAuth
+- ✅ Enhanced User model with Google ID
+- ✅ Improved error handling
+- ✅ API URL configuration for mobile devices
+
+### Bug Fixes
+- ✅ Fixed currency picker overlap issue
+- ✅ Fixed API connectivity for mobile devices
+- ✅ Fixed authentication type safety issues
+- ✅ Added proper error messages throughout the app
 
 ## 📝 Project Structure
 ```

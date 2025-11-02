@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import * as authService from '../services/authService';
+import * as googleAuthService from '../services/googleAuthService';
 
 const AuthContext = createContext();
 
@@ -86,6 +87,23 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const loginWithGoogle = async () => {
+    try {
+      const data = await googleAuthService.signInWithGoogle();
+      if (data.success) {
+        setUser(data.data);
+        setIsAuthenticated(true);
+        return { success: true };
+      }
+      return { success: false, message: data.message };
+    } catch (error) {
+      return {
+        success: false,
+        message: error.message || 'Google Sign-In failed',
+      };
+    }
+  };
+
   const value = {
     user,
     loading,
@@ -93,6 +111,7 @@ export const AuthProvider = ({ children }) => {
     login,
     register,
     logout,
+    loginWithGoogle,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -131,8 +131,34 @@ const getMe = async (req, res) => {
   }
 };
 
+// @desc    Google OAuth callback
+// @route   GET /api/auth/google/callback
+// @access  Public
+const googleCallback = async (req, res) => {
+  try {
+    // User is authenticated by passport
+    const user = req.user;
+
+    // Generate JWT token
+    const token = generateToken(user._id);
+
+    // Send response with user data and token
+    // Redirect to frontend with token in URL for mobile apps
+    res.redirect(`exp://192.168.1.9:8081/--/auth/callback?token=${token}&user=${JSON.stringify({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      currency: user.currency
+    })}`);
+  } catch (error) {
+    console.error(error);
+    res.redirect('exp://192.168.1.9:8081/--/auth/error');
+  }
+};
+
 module.exports = {
   register,
   login,
-  getMe
+  getMe,
+  googleCallback
 };

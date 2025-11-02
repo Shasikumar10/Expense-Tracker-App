@@ -1,6 +1,8 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
+const passport = require('passport');
+const session = require('express-session');
 const connectDB = require('./src/config/db');
 
 // Load environment variables
@@ -19,6 +21,20 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Session middleware (for passport)
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'expense-tracker-secret',
+  resave: false,
+  saveUninitialized: false
+}));
+
+// Initialize Passport
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Passport config
+require('./src/config/passport')(passport);
 
 // Routes
 app.use('/api/auth', require('./src/routes/auth'));
