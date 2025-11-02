@@ -238,19 +238,23 @@ const getUpcomingRecurringExpenses = async (req, res) => {
     const futureDate = new Date();
     futureDate.setDate(futureDate.getDate() + parseInt(days));
 
+    // Find all active recurring expenses for the user
     const upcomingExpenses = await RecurringExpense.find({
       user: req.user._id,
       isActive: true,
-      nextDueDate: {
-        $gte: today,
-        $lte: futureDate
-      }
+      nextDueDate: { $exists: true, $ne: null }
     }).sort({ nextDueDate: 1 });
+
+    // Filter out invalid dates and only keep those within range
+    const validUpcoming = upcomingExpenses.filter(expense => {
+      const dueDate = new Date(expense.nextDueDate);
+      return !isNaN(dueDate.getTime()) && dueDate >= today && dueDate <= futureDate;
+    });
 
     res.status(200).json({
       success: true,
-      count: upcomingExpenses.length,
-      data: upcomingExpenses
+      count: validUpcoming.length,
+      data: validUpcoming
     });
   } catch (error) {
     console.error(error);
