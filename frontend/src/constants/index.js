@@ -57,19 +57,19 @@ export const INCOME_CATEGORIES = [
 
 // Recurring Frequencies
 export const FREQUENCIES = [
-  { label: 'Daily', value: 'daily' },
-  { label: 'Weekly', value: 'weekly' },
-  { label: 'Bi-Weekly', value: 'bi-weekly' },
-  { label: 'Monthly', value: 'monthly' },
-  { label: 'Quarterly', value: 'quarterly' },
-  { label: 'Yearly', value: 'yearly' }
+  'daily',
+  'weekly',
+  'biweekly',
+  'monthly',
+  'quarterly',
+  'yearly'
 ];
 
 // Budget Periods
 export const BUDGET_PERIODS = [
-  { label: 'Weekly', value: 'weekly' },
-  { label: 'Monthly', value: 'monthly' },
-  { label: 'Yearly', value: 'yearly' }
+  'weekly',
+  'monthly',
+  'yearly'
 ];
 
 // Theme Colors
@@ -81,6 +81,7 @@ export const COLORS = {
   warning: '#f59e0b',
   info: '#3b82f6',
   light: '#f3f4f6',
+  lightBlue: '#dbeafe',
   dark: '#1f2937',
   white: '#ffffff',
   black: '#000000',
