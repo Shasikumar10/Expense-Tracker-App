@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const { sendLoginNotification, sendWelcomeEmail } = require('../services/emailService');
 
 // Generate JWT Token
 const generateToken = (id) => {
@@ -34,6 +35,11 @@ const register = async (req, res) => {
     });
 
     if (user) {
+      // Send welcome email (non-blocking)
+      sendWelcomeEmail(user).catch(err => 
+        console.log('Welcome email failed:', err.message)
+      );
+
       res.status(201).json({
         success: true,
         data: {
@@ -89,6 +95,16 @@ const login = async (req, res) => {
         message: 'Invalid credentials'
       });
     }
+
+    // Send login notification email (non-blocking)
+    const loginDetails = {
+      ipAddress: req.ip || req.connection.remoteAddress,
+      userAgent: req.headers['user-agent']
+    };
+    
+    sendLoginNotification(user, loginDetails).catch(err => 
+      console.log('Login notification failed:', err.message)
+    );
 
     res.status(200).json({
       success: true,
