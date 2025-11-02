@@ -104,6 +104,15 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const updateUser = async (userData) => {
+    try {
+      setUser(userData);
+      await authService.storeUser(userData);
+    } catch (error) {
+      console.error('Error updating user:', error);
+    }
+  };
+
   const value = {
     user,
     loading,
@@ -112,6 +121,7 @@ export const AuthProvider = ({ children }) => {
     register,
     logout,
     loginWithGoogle,
+    updateUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

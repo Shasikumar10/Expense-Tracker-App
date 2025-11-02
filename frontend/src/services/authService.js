@@ -49,3 +49,8 @@ export const getStoredUser = async () => {
   const userStr = await AsyncStorage.getItem('user');
   return userStr ? JSON.parse(userStr) : null;
 };
+
+// Store user data
+export const storeUser = async (userData) => {
+  await AsyncStorage.setItem('user', JSON.stringify(userData));
+};

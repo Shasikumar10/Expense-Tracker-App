@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,28 +7,218 @@ import {
   TouchableOpacity,
   Switch,
   Alert,
+  ActivityIndicator,
+  Share,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Picker } from '@react-native-picker/picker';
+import * as FileSystem from 'expo-file-system';
+import * as Sharing from 'expo-sharing';
 import { COLORS } from '../constants';
 import { useAuth } from '../context/AuthContext';
 import { Platform } from 'react-native';
+import { updateUserProfile, deleteUserAccount } from '../services/userService';
+import { getExpenses } from '../services/expenseService';
+import { getIncomes } from '../services/incomeService';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SettingsScreen = ({ navigation }) => {
-  const { user } = useAuth();
+  const { user, logout, updateUser } = useAuth();
   const [notifications, setNotifications] = useState(true);
+  const [emailNotifications, setEmailNotifications] = useState(true);
   const [biometric, setBiometric] = useState(false);
   const [currency, setCurrency] = useState(user?.currency || 'USD');
   const [theme, setTheme] = useState('light');
+  const [saving, setSaving] = useState(false);
 
   const currencies = ['USD', 'EUR', 'GBP', 'INR', 'JPY', 'AUD', 'CAD'];
   const themes = ['light', 'dark', 'auto'];
 
-  const handleSaveSettings = () => {
+  useEffect(() => {
+    loadSettings();
+  }, []);
+
+  const loadSettings = async () => {
+    try {
+      const savedNotifications = await AsyncStorage.getItem('notifications');
+      const savedEmailNotifications = await AsyncStorage.getItem('emailNotifications');
+      const savedBiometric = await AsyncStorage.getItem('biometric');
+      const savedTheme = await AsyncStorage.getItem('theme');
+
+      if (savedNotifications !== null) setNotifications(savedNotifications === 'true');
+      if (savedEmailNotifications !== null) setEmailNotifications(savedEmailNotifications === 'true');
+      if (savedBiometric !== null) setBiometric(savedBiometric === 'true');
+      if (savedTheme !== null) setTheme(savedTheme);
+    } catch (error) {
+      console.error('Error loading settings:', error);
+    }
+  };
+
+  const handleSaveSettings = async () => {
+    try {
+      setSaving(true);
+
+      // Save currency to backend
+      if (currency !== user?.currency) {
+        const response = await updateUserProfile({ currency });
+        if (response.success && updateUser) {
+          updateUser({ ...user, currency });
+        }
+      }
+
+      // Save other settings to AsyncStorage
+      await AsyncStorage.setItem('notifications', notifications.toString());
+      await AsyncStorage.setItem('emailNotifications', emailNotifications.toString());
+      await AsyncStorage.setItem('biometric', biometric.toString());
+      await AsyncStorage.setItem('theme', theme);
+
+      Alert.alert('Success', 'Settings saved successfully!');
+    } catch (error) {
+      Alert.alert('Error', 'Failed to save settings');
+      console.error('Error saving settings:', error);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleExportData = async () => {
+    try {
+      Alert.alert(
+        'Export Data',
+        'Choose export format:',
+        [
+          {
+            text: 'Cancel',
+            style: 'cancel',
+          },
+          {
+            text: 'CSV',
+            onPress: () => exportToCSV(),
+          },
+          {
+            text: 'JSON',
+            onPress: () => exportToJSON(),
+          },
+        ]
+      );
+    } catch (error) {
+      Alert.alert('Error', 'Failed to export data');
+      console.error('Export error:', error);
+    }
+  };
+
+  const exportToCSV = async () => {
+    try {
+      const [expensesData, incomesData] = await Promise.all([
+        getExpenses(),
+        getIncomes(),
+      ]);
+
+      const expenses = expensesData.data || [];
+      const incomes = incomesData.data || [];
+
+      // Create CSV content
+      let csvContent = 'Type,Date,Amount,Category,Description,Payment Method\n';
+      
+      expenses.forEach((expense) => {
+        const date = new Date(expense.date).toLocaleDateString();
+        csvContent += `Expense,${date},${expense.amount},${expense.category},"${expense.description}",${expense.paymentMethod}\n`;
+      });
+
+      incomes.forEach((income) => {
+        const date = new Date(income.date).toLocaleDateString();
+        csvContent += `Income,${date},${income.amount},${income.category},"${income.description}",${income.source || 'N/A'}\n`;
+      });
+
+      const fileName = `expense_tracker_${new Date().getTime()}.csv`;
+      const fileUri = FileSystem.documentDirectory + fileName;
+      
+      await FileSystem.writeAsStringAsync(fileUri, csvContent, {
+        encoding: FileSystem.EncodingType.UTF8,
+      });
+
+      if (await Sharing.isAvailableAsync()) {
+        await Sharing.shareAsync(fileUri);
+      } else {
+        Alert.alert('Success', `Data exported to ${fileName}`);
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Failed to export CSV');
+      console.error('CSV export error:', error);
+    }
+  };
+
+  const exportToJSON = async () => {
+    try {
+      const [expensesData, incomesData] = await Promise.all([
+        getExpenses(),
+        getIncomes(),
+      ]);
+
+      const exportData = {
+        expenses: expensesData.data || [],
+        incomes: incomesData.data || [],
+        exportDate: new Date().toISOString(),
+        user: {
+          name: user?.name,
+          email: user?.email,
+          currency: user?.currency,
+        },
+      };
+
+      const jsonContent = JSON.stringify(exportData, null, 2);
+      const fileName = `expense_tracker_${new Date().getTime()}.json`;
+      const fileUri = FileSystem.documentDirectory + fileName;
+      
+      await FileSystem.writeAsStringAsync(fileUri, jsonContent, {
+        encoding: FileSystem.EncodingType.UTF8,
+      });
+
+      if (await Sharing.isAvailableAsync()) {
+        await Sharing.shareAsync(fileUri);
+      } else {
+        Alert.alert('Success', `Data exported to ${fileName}`);
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Failed to export JSON');
+      console.error('JSON export error:', error);
+    }
+  };
+
+  const handleClearCache = async () => {
+    try {
+      await AsyncStorage.clear();
+      Alert.alert('Success', 'Cache cleared successfully!');
+    } catch (error) {
+      Alert.alert('Error', 'Failed to clear cache');
+      console.error('Clear cache error:', error);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
     Alert.alert(
-      'Success',
-      'Settings saved successfully!',
-      [{ text: 'OK' }]
+      'Delete Account',
+      'This action cannot be undone. All your data will be permanently deleted.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await deleteUserAccount();
+              Alert.alert(
+                'Account Deleted',
+                'Your account has been permanently deleted.',
+                [{ text: 'OK', onPress: logout }]
+              );
+            } catch (error) {
+              Alert.alert('Error', 'Failed to delete account');
+              console.error('Delete account error:', error);
+            }
+          },
+        },
+      ]
     );
   };
 
@@ -71,8 +261,8 @@ const SettingsScreen = ({ navigation }) => {
               subtitle="Get weekly expense reports"
               rightComponent={
                 <Switch
-                  value={true}
-                  onValueChange={() => {}}
+                  value={emailNotifications}
+                  onValueChange={setEmailNotifications}
                   trackColor={{ false: COLORS.gray, true: COLORS.primary }}
                   thumbColor={COLORS.white}
                 />
@@ -98,7 +288,10 @@ const SettingsScreen = ({ navigation }) => {
                 />
               }
             />
-            <TouchableOpacity style={styles.settingButton}>
+            <TouchableOpacity 
+              style={styles.settingButton}
+              onPress={() => navigation.navigate('ChangePassword')}
+            >
               <SettingItem
                 icon="key-outline"
                 title="Change Password"
@@ -169,7 +362,10 @@ const SettingsScreen = ({ navigation }) => {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Data Management</Text>
           <View style={styles.card}>
-            <TouchableOpacity style={styles.settingButton}>
+            <TouchableOpacity 
+              style={styles.settingButton}
+              onPress={handleExportData}
+            >
               <SettingItem
                 icon="download-outline"
                 title="Export Data"
@@ -187,7 +383,7 @@ const SettingsScreen = ({ navigation }) => {
                   'This will clear all cached data. Continue?',
                   [
                     { text: 'Cancel', style: 'cancel' },
-                    { text: 'Clear', onPress: () => Alert.alert('Success', 'Cache cleared!') }
+                    { text: 'Clear', onPress: handleClearCache }
                   ]
                 );
               }}
@@ -210,20 +406,7 @@ const SettingsScreen = ({ navigation }) => {
           <View style={styles.card}>
             <TouchableOpacity 
               style={styles.settingButton}
-              onPress={() => {
-                Alert.alert(
-                  'Delete Account',
-                  'This action cannot be undone. All your data will be permanently deleted.',
-                  [
-                    { text: 'Cancel', style: 'cancel' },
-                    { 
-                      text: 'Delete', 
-                      style: 'destructive',
-                      onPress: () => Alert.alert('Info', 'Account deletion is not yet implemented')
-                    }
-                  ]
-                );
-              }}
+              onPress={handleDeleteAccount}
             >
               <SettingItem
                 icon="warning-outline"
@@ -238,10 +421,18 @@ const SettingsScreen = ({ navigation }) => {
         </View>
 
         <TouchableOpacity 
-          style={styles.saveButton}
+          style={[styles.saveButton, saving && styles.saveButtonDisabled]}
           onPress={handleSaveSettings}
+          disabled={saving}
         >
-          <Text style={styles.saveButtonText}>Save Settings</Text>
+          {saving ? (
+            <ActivityIndicator color={COLORS.white} />
+          ) : (
+            <>
+              <Ionicons name="save-outline" size={20} color={COLORS.white} />
+              <Text style={styles.saveButtonText}>Save Settings</Text>
+            </>
+          )}
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -319,14 +510,20 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.primary,
     borderRadius: 8,
     padding: 15,
+    flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     marginTop: 10,
     marginBottom: 30,
+  },
+  saveButtonDisabled: {
+    opacity: 0.6,
   },
   saveButtonText: {
     color: COLORS.white,
     fontSize: 16,
     fontWeight: 'bold',
+    marginLeft: 8,
   },
 });
 

@@ -22,6 +22,7 @@ import AddRecurringExpenseScreen from '../screens/AddRecurringExpenseScreen';
 import ReportsScreen from '../screens/ReportsScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import HelpSupportScreen from '../screens/HelpSupportScreen';
+import ChangePasswordScreen from '../screens/ChangePasswordScreen';
 
 import { COLORS } from '../constants';
 
@@ -176,6 +177,11 @@ const MainStack = () => (
       name="HelpSupport" 
       component={HelpSupportScreen}
       options={{ title: 'Help & Support' }}
+    />
+    <Stack.Screen 
+      name="ChangePassword" 
+      component={ChangePasswordScreen}
+      options={{ title: 'Change Password' }}
     />
   </Stack.Navigator>
 );
