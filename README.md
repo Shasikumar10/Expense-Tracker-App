@@ -1,6 +1,6 @@
 # Expense-Tracker-App
 
-A full-stack expense tracking application built with Node.js/Express backend and React frontend.
+A full-stack expense tracking mobile application built with Node.js/Express backend and React Native frontend.
 
 ## Features
 - Add, edit, and delete expenses
@@ -9,6 +9,7 @@ A full-stack expense tracking application built with Node.js/Express backend and
 - Filter and search expenses
 - User authentication
 - MongoDB database integration
+- Cross-platform mobile app (iOS & Android)
 
 ## Tech Stack
 
@@ -19,11 +20,12 @@ A full-stack expense tracking application built with Node.js/Express backend and
 - JWT Authentication
 - bcrypt for password hashing
 
-### Frontend
-- React
+### Frontend (Mobile)
+- React Native
+- Expo
 - Axios for API calls
-- React Router
-- Modern UI components
+- React Navigation
+- Modern mobile UI components
 
 ## Getting Started
 
@@ -38,15 +40,17 @@ A full-stack expense tracking application built with Node.js/Express backend and
 ```bash
 cd backend
 npm install
-# Create .env file with your configurations
+# Create .env file with your configurations (copy from .env.example)
 npm start
 ```
 
-#### Frontend Setup
+#### Frontend Setup (Mobile)
 ```bash
 cd frontend
 npm install
-npm start
+npx expo start
+# Scan QR code with Expo Go app on your mobile device
+# Or press 'a' for Android emulator or 'i' for iOS simulator
 ```
 
 ## Project Structure
@@ -61,11 +65,14 @@ Expense-Tracker/
 │   │   └── middleware/  # Custom middleware
 │   ├── server.js     # Entry point
 │   └── package.json
-└── frontend/         # React frontend
+└── frontend/         # React Native Mobile App
     ├── src/
     │   ├── components/
+    │   ├── screens/
     │   ├── services/
-    │   └── App.js
+    │   ├── navigation/
+    │   └── context/
+    ├── App.js
     └── package.json
 ```
 
