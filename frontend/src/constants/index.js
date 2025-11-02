@@ -42,6 +42,36 @@ export const CURRENCIES = [
   { code: 'CAD', symbol: 'C$', name: 'Canadian Dollar' }
 ];
 
+// Income Categories
+export const INCOME_CATEGORIES = [
+  'Salary',
+  'Freelance',
+  'Business',
+  'Investment',
+  'Rental',
+  'Gift',
+  'Bonus',
+  'Refund',
+  'Other'
+];
+
+// Recurring Frequencies
+export const FREQUENCIES = [
+  { label: 'Daily', value: 'daily' },
+  { label: 'Weekly', value: 'weekly' },
+  { label: 'Bi-Weekly', value: 'bi-weekly' },
+  { label: 'Monthly', value: 'monthly' },
+  { label: 'Quarterly', value: 'quarterly' },
+  { label: 'Yearly', value: 'yearly' }
+];
+
+// Budget Periods
+export const BUDGET_PERIODS = [
+  { label: 'Weekly', value: 'weekly' },
+  { label: 'Monthly', value: 'monthly' },
+  { label: 'Yearly', value: 'yearly' }
+];
+
 // Theme Colors
 export const COLORS = {
   primary: '#6366f1',

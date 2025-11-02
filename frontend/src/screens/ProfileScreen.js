@@ -11,7 +11,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../context/AuthContext';
 import { COLORS } from '../constants';
 
-const ProfileScreen = () => {
+const ProfileScreen = ({ navigation }) => {
   const { user, logout } = useAuth();
 
   const handleLogout = () => {
@@ -79,8 +79,26 @@ const ProfileScreen = () => {
 
         {/* Actions */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Actions</Text>
+          <Text style={styles.sectionTitle}>More Options</Text>
           
+          <TouchableOpacity 
+            style={styles.actionButton}
+            onPress={() => navigation.navigate('RecurringExpenses')}
+          >
+            <Ionicons name="repeat-outline" size={24} color={COLORS.text} />
+            <Text style={styles.actionButtonText}>Recurring Expenses</Text>
+            <Ionicons name="chevron-forward" size={24} color={COLORS.textSecondary} />
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={styles.actionButton}
+            onPress={() => navigation.navigate('Reports')}
+          >
+            <Ionicons name="analytics-outline" size={24} color={COLORS.text} />
+            <Text style={styles.actionButtonText}>Reports & Analytics</Text>
+            <Ionicons name="chevron-forward" size={24} color={COLORS.textSecondary} />
+          </TouchableOpacity>
+
           <TouchableOpacity style={styles.actionButton}>
             <Ionicons name="settings-outline" size={24} color={COLORS.text} />
             <Text style={styles.actionButtonText}>Settings</Text>
@@ -90,12 +108,6 @@ const ProfileScreen = () => {
           <TouchableOpacity style={styles.actionButton}>
             <Ionicons name="help-circle-outline" size={24} color={COLORS.text} />
             <Text style={styles.actionButtonText}>Help & Support</Text>
-            <Ionicons name="chevron-forward" size={24} color={COLORS.textSecondary} />
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.actionButton}>
-            <Ionicons name="document-text-outline" size={24} color={COLORS.text} />
-            <Text style={styles.actionButtonText}>Terms & Privacy</Text>
             <Ionicons name="chevron-forward" size={24} color={COLORS.textSecondary} />
           </TouchableOpacity>
         </View>

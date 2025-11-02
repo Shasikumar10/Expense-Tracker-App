@@ -13,6 +13,13 @@ import AddExpenseScreen from '../screens/AddExpenseScreen';
 import ExpenseDetailScreen from '../screens/ExpenseDetailScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import StatsScreen from '../screens/StatsScreen';
+import BudgetsScreen from '../screens/BudgetsScreen';
+import AddBudgetScreen from '../screens/AddBudgetScreen';
+import IncomeScreen from '../screens/IncomeScreen';
+import AddIncomeScreen from '../screens/AddIncomeScreen';
+import RecurringExpensesScreen from '../screens/RecurringExpensesScreen';
+import AddRecurringExpenseScreen from '../screens/AddRecurringExpenseScreen';
+import ReportsScreen from '../screens/ReportsScreen';
 
 import { COLORS } from '../constants';
 
@@ -56,6 +63,10 @@ const MainTabs = () => (
           iconName = focused ? 'home' : 'home-outline';
         } else if (route.name === 'Stats') {
           iconName = focused ? 'stats-chart' : 'stats-chart-outline';
+        } else if (route.name === 'Budgets') {
+          iconName = focused ? 'wallet' : 'wallet-outline';
+        } else if (route.name === 'Income') {
+          iconName = focused ? 'cash' : 'cash-outline';
         } else if (route.name === 'Profile') {
           iconName = focused ? 'person' : 'person-outline';
         }
@@ -77,6 +88,16 @@ const MainTabs = () => (
       name="Home" 
       component={HomeScreen}
       options={{ title: 'My Expenses' }}
+    />
+    <Tab.Screen 
+      name="Budgets" 
+      component={BudgetsScreen}
+      options={{ title: 'Budgets' }}
+    />
+    <Tab.Screen 
+      name="Income" 
+      component={IncomeScreen}
+      options={{ title: 'Income' }}
     />
     <Tab.Screen 
       name="Stats" 
@@ -118,6 +139,31 @@ const MainStack = () => (
       name="ExpenseDetail" 
       component={ExpenseDetailScreen}
       options={{ title: 'Expense Details' }}
+    />
+    <Stack.Screen 
+      name="AddBudget" 
+      component={AddBudgetScreen}
+      options={{ title: 'Create Budget' }}
+    />
+    <Stack.Screen 
+      name="AddIncome" 
+      component={AddIncomeScreen}
+      options={{ title: 'Add Income' }}
+    />
+    <Stack.Screen 
+      name="RecurringExpenses" 
+      component={RecurringExpensesScreen}
+      options={{ title: 'Recurring Expenses' }}
+    />
+    <Stack.Screen 
+      name="AddRecurringExpense" 
+      component={AddRecurringExpenseScreen}
+      options={{ title: 'Add Recurring Expense' }}
+    />
+    <Stack.Screen 
+      name="Reports" 
+      component={ReportsScreen}
+      options={{ title: 'Financial Reports' }}
     />
   </Stack.Navigator>
 );
