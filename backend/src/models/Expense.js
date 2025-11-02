@@ -58,7 +58,18 @@ const expenseSchema = new mongoose.Schema({
   tags: [{
     type: String,
     trim: true
-  }]
+  }],
+  receiptUrl: {
+    type: String
+  },
+  location: {
+    type: String,
+    trim: true
+  },
+  notes: {
+    type: String,
+    maxlength: [1000, 'Notes cannot exceed 1000 characters']
+  }
 }, {
   timestamps: true
 });

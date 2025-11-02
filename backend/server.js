@@ -24,6 +24,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/auth', require('./src/routes/auth'));
 app.use('/api/expenses', require('./src/routes/expenses'));
 app.use('/api/users', require('./src/routes/users'));
+app.use('/api/budgets', require('./src/routes/budgets'));
+app.use('/api/income', require('./src/routes/income'));
+app.use('/api/recurring-expenses', require('./src/routes/recurringExpenses'));
+app.use('/api/reports', require('./src/routes/reports'));
 
 // Health check route
 app.get('/api/health', (req, res) => {
