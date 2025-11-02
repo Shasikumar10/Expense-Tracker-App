@@ -23,13 +23,20 @@ export const AuthProvider = ({ children }) => {
   const checkAuthStatus = async () => {
     try {
       const loggedIn = await authService.isLoggedIn();
-      if (loggedIn) {
+      if (loggedIn === true) {
         const storedUser = await authService.getStoredUser();
-        setUser(storedUser);
-        setIsAuthenticated(true);
+        if (storedUser) {
+          setUser(storedUser);
+          setIsAuthenticated(true);
+        } else {
+          setIsAuthenticated(false);
+        }
+      } else {
+        setIsAuthenticated(false);
       }
     } catch (error) {
       console.error('Error checking auth status:', error);
+      setIsAuthenticated(false);
     } finally {
       setLoading(false);
     }

@@ -35,8 +35,13 @@ export const getCurrentUser = async () => {
 
 // Check if user is logged in
 export const isLoggedIn = async () => {
-  const token = await AsyncStorage.getItem('token');
-  return !!token;
+  try {
+    const token = await AsyncStorage.getItem('token');
+    return token !== null && token !== undefined && token !== '';
+  } catch (error) {
+    console.error('Error checking login status:', error);
+    return false;
+  }
 };
 
 // Get stored user
